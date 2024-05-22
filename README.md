@@ -84,6 +84,10 @@ catch (Exception ex)
 ```
 await Seed.SeedData(context);
 ```
+- Defined baseController to save repeating controller class decorations
+- Defined activities controller
 
-
-
+- Creating the UI app with Vite
+```
+npm create vite@latest
+```
