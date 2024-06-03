@@ -91,3 +91,28 @@ await Seed.SeedData(context);
 ```
 npm create vite@latest
 ```
+
+- Adding mediator from the architecture approach to the Application/ where the business logic sits
+```
+dotnet add package MediatR --version 12.2.0
+```
+
+- Added List.cs to Application/Activities/List.cs
+
+- Removed directly inject context to ActivitiesController, replced with IMediator
+```
+    private readonly DataContext _context;
+    public ActivitiesController(Context context) {
+        _context = context;
+    }
+```
+
+- In Program.cs, registring the Mediator
+```
+using Application.Activities;
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(List.Handler).Assembly));
+```
+
+- One of the goals is to keep the controller as thing as possible
+    - Adding mediator to the basecontroller
