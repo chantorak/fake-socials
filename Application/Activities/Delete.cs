@@ -1,21 +1,23 @@
 using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Persistence;
 
 namespace Application.Activities
 {
-    public class Create 
+    public class Delete 
     {
         public class Command : IRequest
         {
             [Required]
-            public Activity Activity { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
 
             public Handler(DataContext context)
             {
@@ -24,8 +26,9 @@ namespace Application.Activities
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Activities.Add(request.Activity);
+                var activity = await _context.Activities.FindAsync(request.Id);
 
+                _context.Remove(activity);
                 await _context.SaveChangesAsync();
             }
 

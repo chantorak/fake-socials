@@ -114,5 +114,27 @@ using Application.Activities;
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(List.Handler).Assembly));
 ```
 
-- One of the goals is to keep the controller as thing as possible
-    - Adding mediator to the basecontroller
+- In Application creating mediatR handlers, like Activities/Create.cs, /Details.cs
+    -  Added add, delete, create, etc
+
+- In the controller instead of directly using context, using the meditaors from the Applicaiton
+
+- In the Edit mediator, you have to map every field so instead going to use AutoMapper
+```
+activity.Title = request.Activity.Title ?? activity.Title;
+```
+
+- In /Application adding
+```
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+```
+
+- Created Application/Core/MappingProfiles.cs
+
+- Register the MappingProfiles as injectable for the API, API/Program.cs
+```
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+```
+
+- Used https://transform.tools/json-to-typescript to convert json to typescript in the client-app for types
+
