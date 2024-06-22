@@ -6,13 +6,19 @@ import ActivityDashbaord from '../../features/activities/dashbaord/ActivityDashb
 import { v4 as uuid } from "uuid";
 import agent from '../api/agents';
 import LoadingComponent from './LoadingComponent';
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+} from '@tanstack/react-query';
 
 function App() {
     const [activities, setActivities] = useState<Activity[]>([]);
     const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
     const [editMode, setEditMode] = useState<Boolean>(false);
-    const [loading, setLoading] = useState(true);
-    const [submitting, setSubmitting] = useState(true);
+
 
     useEffect(() => {
         agent.Acitivities.list().then(response => {
@@ -20,7 +26,6 @@ function App() {
                 act.date = act.date.split('T')[0];
             });
             setActivities(response);
-            setLoading(false);
         });
     }, []);
 
