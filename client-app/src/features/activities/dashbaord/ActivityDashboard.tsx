@@ -1,4 +1,4 @@
-import { Container, Unstable_Grid2 as Grid, Box, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import ActivityList from './ActivityList';
 import ActivityDetails from '../details/ActivityDetails';
 import { Activity } from '../../../app/models/activity';
@@ -14,6 +14,7 @@ interface Props {
     editMode: Boolean;
     createOrEidt: (activity: Activity) => void;
     deleteActivity: (id: string) => void;
+    submitting: boolean;
 }
 
 export default function ActivityDashbaord(props: Props) {
@@ -21,7 +22,12 @@ export default function ActivityDashbaord(props: Props) {
         <Stack sx={{ marginTop: 4 }} alignItems="center" direction="column">
             <Stack direction="row" spacing={4} padding={0}>
                 <Box boxShadow={1} padding={0} >
-                    <ActivityList activities={props.activities} selectActivity={props.selectActivity} deleteActivity={props.deleteActivity} />
+                    <ActivityList 
+                        activities={props.activities}
+                        selectActivity={props.selectActivity}
+                        deleteActivity={props.deleteActivity}
+                        submitting={props.submitting}
+                    />
                 </Box>
                 <Box padding={0} minWidth={350}>
                     <Stack spacing={2}>
@@ -38,6 +44,7 @@ export default function ActivityDashbaord(props: Props) {
                                     activity={props.selectedActivity}
                                     closeForm={props.closeForm}
                                     createOrEidt={props.createOrEidt}
+                                    submitting={props.submitting}
                                 />
                             </Box> : <></>
                         }

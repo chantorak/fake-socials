@@ -1,4 +1,4 @@
-import { Stack, TextField, Button } from "@mui/material";
+import { Stack, TextField, Button, CircularProgress } from "@mui/material";
 import { Activity } from "../../../app/models/activity";
 import { ChangeEvent, FormEvent, useState } from "react";
 
@@ -6,6 +6,7 @@ interface Props {
     activity?: Activity;
     closeForm: () => void;
     createOrEidt: (activity: Activity) => void;
+    submitting: boolean;
 }
 
 export default function ActivityForm(props: Props) {
@@ -33,7 +34,7 @@ export default function ActivityForm(props: Props) {
         setActivity({ ...activity, [name]: value });
     }
 
-    return <form onSubmit={handleSubmit}>
+    return props.submitting ? <CircularProgress></CircularProgress> : <form onSubmit={handleSubmit} >
         <Stack spacing={1}>
             <TextField placeholder="Title" name="title" variant="outlined" fullWidth value={activity.title} onChange={handleInputChange} />
 
@@ -41,7 +42,7 @@ export default function ActivityForm(props: Props) {
 
             <TextField placeholder="Category" name="category"  variant="outlined" fullWidth value={activity.category} onChange={handleInputChange} />
 
-            <TextField placeholder="Date" name="date" variant="outlined" fullWidth value={activity.date} onChange={handleInputChange} />
+            <TextField type="date" placeholder="Date" name="date" variant="outlined" fullWidth value={activity.date} onChange={handleInputChange} />
 
             <TextField placeholder="City" name="city" variant="outlined" fullWidth value={activity.city} onChange={handleInputChange} />
 
