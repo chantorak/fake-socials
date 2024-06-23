@@ -1,33 +1,19 @@
 import './index.css';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Activity } from '../models/activity';
 import NavBar from './navbar';
 import ActivityDashbaord from '../../features/activities/dashbaord/ActivityDashboard';
 import { v4 as uuid } from "uuid";
 import agent from '../api/agents';
 import LoadingComponent from './LoadingComponent';
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    QueryClient,
-    QueryClientProvider,
-} from '@tanstack/react-query';
 
 function App() {
     const [activities, setActivities] = useState<Activity[]>([]);
     const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
-    const [editMode, setEditMode] = useState<Boolean>(false);
+    const [editMode, setEditMode] = useState<boolean>(false);
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
-
-    useEffect(() => {
-        agent.Acitivities.list().then(response => {
-            response.forEach(act => {
-                act.date = act.date.split('T')[0];
-            });
-            setActivities(response);
-        });
-    }, []);
+    const { isLoading } = agent.getActivities();
 
     function handleSelectActivity(id: string) {
         setEditMode(false);
@@ -73,13 +59,12 @@ function App() {
         });
     }
 
-    if (loading) return <LoadingComponent content='Loading app'></LoadingComponent>
+    if (isLoading) return <LoadingComponent content='Loading app'></LoadingComponent>
 
     return (
         <>
             <NavBar openForm={handleFormOpen} />
             <ActivityDashbaord
-                activities={activities}
                 selectedActivity={selectedActivity}
                 selectActivity={handleSelectActivity}
                 cancelSelectActivity={handleCancelSelectActivity}

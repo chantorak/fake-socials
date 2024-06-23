@@ -1,9 +1,9 @@
 import { Button, Divider, List, ListItem, Typography, Unstable_Grid2 as Grid, Box, CircularProgress } from '@mui/material';
 import { Activity } from "../../../app/models/activity";
 import { useState } from 'react';
+import agent from '../../../app/api/agents';
 
 interface Props {
-    activities: Activity[];
     selectActivity: (id: string) => void;
     deleteActivity: (id: string) => void;
     submitting: boolean;
@@ -11,6 +11,7 @@ interface Props {
 
 export default function ActivityList(props: Props) {
     const [target, setTarget] = useState('');
+    const { data: activities = [] } = agent.getActivities();
 
     function handleActivityDelete(id: string) {
         setTarget(id);
@@ -19,7 +20,7 @@ export default function ActivityList(props: Props) {
 
     return (
         <List>
-            {props.activities.map((activity: Activity) => (
+            {activities.map((activity: Activity) => (
                 <Box key={activity.id}>
                     {props.submitting && activity.id === target ? (
                         <CircularProgress />

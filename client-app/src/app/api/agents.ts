@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { Activity } from "../models/activity";
+import { useQuery } from "@tanstack/react-query";
 
 axios.defaults.baseURL = 'http://localhost:5163/api/';
 
@@ -31,8 +32,21 @@ const Acitivities = {
     delete: (id: string) => request.delete<Activity[]>(`/activities/${id}`)
 }
 
+function getActivities() {
+    return useQuery({
+        queryKey: ['activities'],
+        queryFn: () => Acitivities.list().then(response => {
+            response.forEach(act => {
+                act.date = act.date.split('T')[0];
+            });
+            return response;
+        })
+    });
+}
+
 const agent = {
-    Acitivities
+    Acitivities,
+    getActivities
 }
 
 export default agent;

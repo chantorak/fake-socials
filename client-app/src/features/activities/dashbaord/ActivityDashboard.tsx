@@ -5,7 +5,6 @@ import { Activity } from '../../../app/models/activity';
 import ActivityForm from '../form/ActivityForm';
 
 interface Props {
-    activities: Activity[];
     selectedActivity?: Activity;
     selectActivity: (id: string) => void;
     cancelSelectActivity: () => void;
@@ -23,7 +22,6 @@ export default function ActivityDashbaord(props: Props) {
             <Stack direction="row" spacing={4} padding={0}>
                 <Box boxShadow={1} padding={0} >
                     <ActivityList 
-                        activities={props.activities}
                         selectActivity={props.selectActivity}
                         deleteActivity={props.deleteActivity}
                         submitting={props.submitting}
