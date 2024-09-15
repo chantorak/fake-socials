@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
     AppBar,
     Button,
@@ -7,18 +6,7 @@ import {
     Typography,
 } from '@mui/material';
 
-interface Props {
-    openForm: () => void;
-}
-
-const navItems = ['Create Activtiy'];
-
-export default function NavBar({ openForm }: Props) {
-    const handleDrawerToggle = () => {
-        setMobileOpen((prevState) => !prevState);
-    };
-    const [mobileOpen, setMobileOpen] = React.useState(false);
-
+export default function NavBar() {
     return (
         <AppBar component="nav" position="sticky" sx={{ bgcolor: 'info.main' }}>
             <Toolbar sx={{
@@ -26,11 +14,9 @@ export default function NavBar({ openForm }: Props) {
             }}>
                 <Typography>FAKE SOCIALS</Typography>
                 <Divider orientation="vertical" flexItem />
-                {navItems.map((item) => (
-                    <Button disableRipple onClick={openForm} disableElevation={true} variant="contained" key={item} sx={{ color: '#fff' }}>
-                        {item}
-                    </Button>
-                ))}
+                <Button disableRipple href='/' disableElevation={true} variant="contained" sx={{ color: '#fff' }}>Home Page</Button>
+                <Button disableRipple href='/activities' disableElevation={true} variant="contained" sx={{ color: '#fff' }}>Activities</Button>
+                <Button disableRipple href='/create-activity' disableElevation={true} variant="contained" sx={{ color: '#fff' }}>Create Activity</Button>
             </Toolbar>
         </AppBar>
     );

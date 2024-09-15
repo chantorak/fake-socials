@@ -3,6 +3,7 @@
 #!/usr/bin/env bash
 green="\033[1;32m"
 reset="\033[m"
+```
 
 echo "About to create the directory"
 mkdir Reactivities
@@ -138,3 +139,21 @@ builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
 - Used https://transform.tools/json-to-typescript to convert json to typescript in the client-app for types
 
+- Validation can happen in domain layer with annotations [Required] but we are going to do in the application layer with fluent.
+
+- Deciding not to have error logic in the controller lik ebeloew, instead inside the applicaitont to keep the controller as thin
+```
+[HttpGet("{id}")]
+public async Task<ActionResult<Activity>> GetActivity(Guid id)
+{
+    var activity = await Mediator.Send(new Details.Query{ Id = id});
+
+    if (activity == null) return NotFound();
+
+    return activity;
+}
+```
+
+- Commands do not return anything, but it's perfectly fine to return Sucessfull or not...
+
+- Creating exception handling middleware

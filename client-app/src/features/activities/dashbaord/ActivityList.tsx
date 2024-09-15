@@ -1,67 +1,19 @@
-import { Button, Divider, List, ListItem, Typography, Unstable_Grid2 as Grid, Box, CircularProgress } from '@mui/material';
+import { Divider, List, Box, CircularProgress } from '@mui/material';
 import { Activity } from "../../../app/models/activity";
-import { useState } from 'react';
 import agent from '../../../app/api/agents';
+import ActivityListItem from './ActivityListItem';
 
-interface Props {
-    selectActivity: (id: string) => void;
-    deleteActivity: (id: string) => void;
-    submitting: boolean;
-}
+export default function ActivityList() {
+    const { data: activities = [], isFetching } = agent.getActivities();
 
-export default function ActivityList(props: Props) {
-    const [target, setTarget] = useState('');
-    const { data: activities = [] } = agent.getActivities();
-
-    function handleActivityDelete(id: string) {
-        setTarget(id);
-        props.deleteActivity(id);
-    }
+    if (isFetching) 
+        return <CircularProgress></CircularProgress>
 
     return (
         <List>
             {activities.map((activity: Activity) => (
                 <Box key={activity.id}>
-                    {props.submitting && activity.id === target ? (
-                        <CircularProgress />
-                    ) : (
-                        <ListItem>
-                            <Grid container>
-                                <Grid width={400}>
-                                    <Typography variant="h5" color="text.secondary">
-                                        {activity.title}
-                                    </Typography>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                                        {activity.date}
-                                    </Typography>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                                        {activity.description}
-                                    </Typography>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                                        {activity.city}, {activity.venue}
-                                    </Typography>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                                        {activity.category}
-                                    </Typography>
-                                </Grid>
-                                <Grid container alignContent="flex-end">
-                                    <Button
-                                        color="error"
-                                        onClick={() => handleActivityDelete(activity.id)}
-                                        variant="contained"
-                                    >
-                                        Delete
-                                    </Button>
-                                    <Button
-                                        onClick={() => props.selectActivity(activity.id)}
-                                        variant="contained"
-                                    >
-                                        View
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </ListItem>
-                    )}
+                        <ActivityListItem activity={activity}></ActivityListItem>
                     <Divider component="li" />
                 </Box>
             ))}

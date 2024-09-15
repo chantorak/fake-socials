@@ -3,6 +3,7 @@ using Persistence;
 using Application.Activities;
 using Application.Core;
 using API.Extensions;
+using API.Miiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationService(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

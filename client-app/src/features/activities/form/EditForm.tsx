@@ -1,18 +1,15 @@
 import { Stack, TextField, Button, CircularProgress } from "@mui/material";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import agent from "../../../app/api/agents";
+import { useNavigate, useParams } from "react-router-dom";
 import { Activity } from "../../../app/models/activity";
-import { ChangeEvent, FormEvent, useState } from "react";
 
-interface Props {
-    activity?: Activity;
-    closeForm: () => void;
-    createOrEidt: (activity: Activity) => void;
-    submitting: boolean;
-}
-
-export default function ActivityForm(props: Props) {
-    const { activity: selectedActivity, closeForm } = props;
-
-    const initialState = selectedActivity ?? {
+export default function EditForm() {
+    const { id } = useParams();
+    const { isFetching, refetch } = agent.getActivity(id);
+    const { mutateAsync, isPending } = agent.editActivity();
+    const naviagte = useNavigate();
+    const [activity, setActivity] = useState({
         id: '',
         title: '',
         category: '',
@@ -20,27 +17,34 @@ export default function ActivityForm(props: Props) {
         date: '',
         city: '',
         venue: ''
-    };
+    });
 
-    const [activity, setActivity] = useState(initialState)
+    useEffect(() => {
+        if (id)
+            refetch().then((res) => setActivity(res?.data as Activity));
+    }, []);
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        props.createOrEidt(activity);
+        mutateAsync(activity).then(() => {
+            naviagte(`/activity/${id}`);
+        });
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
         const { name, value } = event.target;
-        setActivity({ ...activity, [name]: value });
+        setActivity({...activity, [name]: value });
     }
 
-    return props.submitting ? <CircularProgress></CircularProgress> : <form onSubmit={handleSubmit} >
+    if (isFetching) return <CircularProgress></CircularProgress>;
+
+    return isPending ? <CircularProgress></CircularProgress> : <form onSubmit={handleSubmit} >
         <Stack spacing={1}>
             <TextField placeholder="Title" name="title" variant="outlined" fullWidth value={activity.title} onChange={handleInputChange} />
 
             <TextField placeholder="Description" name="description" variant="outlined" fullWidth value={activity.description} onChange={handleInputChange} />
 
-            <TextField placeholder="Category" name="category"  variant="outlined" fullWidth value={activity.category} onChange={handleInputChange} />
+            <TextField placeholder="Category" name="category" variant="outlined" fullWidth value={activity.category} onChange={handleInputChange} />
 
             <TextField type="date" placeholder="Date" name="date" variant="outlined" fullWidth value={activity.date} onChange={handleInputChange} />
 
@@ -50,7 +54,7 @@ export default function ActivityForm(props: Props) {
 
             <Button fullWidth variant="contained" type="submit">Submit</Button>
 
-            <Button fullWidth variant="contained" onClick={closeForm}>Cancel</Button>
+            <Button fullWidth variant="contained" onClick={() => naviagte(`/activity/${id}`)}>Cancel</Button>
         </Stack>
     </form>
 }

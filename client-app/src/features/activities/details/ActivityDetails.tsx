@@ -1,14 +1,16 @@
-import { Typography, Card, CardContent, CardMedia, CardActionArea, CardHeader, ButtonGroup, Button, CardActions } from '@mui/material';
-import { Activity } from "../../../app/models/activity";
+import { Typography, Card, CardContent, CardMedia, CardHeader, Button, CardActions, CircularProgress } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import agent from '../../../app/api/agents';
 
-interface Props { 
-    activity: Activity;
-    cancelSelectActivity: () => void;
-    openForm: (id: string) => void;
-}
 
-export default function ActivityDetails(props: Props) {
-    const {activity, openForm, cancelSelectActivity} = props;
+export default function ActivityDetails() {
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const { isFetching, data: activity } = agent.getActivity(id);
+
+    if (isFetching) return <CircularProgress></CircularProgress>;
+
+    if (!activity) return <h3>The activity not found</h3>;
 
     return (
         <Card>
@@ -31,10 +33,10 @@ export default function ActivityDetails(props: Props) {
                 </Typography>
             </CardContent>
             <CardActions className="hello">
-                <Button variant="contained" onClick={() => openForm(activity.id)}>
+                <Button variant="contained" onClick={() => navigate(`/edit-activity/${activity.id}`)}>
                     Edit
                 </Button>
-                <Button onClick={cancelSelectActivity} variant="text">
+                <Button onClick={() => navigate(`/activities`)} variant="text">
                     Cancel
                 </Button>
             </CardActions>
